@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <link rel="stylesheet" href="cursor.css">
+<meta charset="UTF-8">
+<title>Dashboard</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #0f172a;
+  color: white;
+}
+
+/* HEADER */
+.header {
+  height: 60px;
+  background: #0f172a;
+  border-bottom: 1px solid #1e293b;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+}
+
+/* SIDEBAR */
+.sidebar {
+  position: fixed;
+  top: 60px;
+  left: 0;
+  width: 220px;
+  height: calc(100% - 60px);
+  background: #111827;
+  border-right: 1px solid #1e293b;
+  padding-top: 20px;
+}
+
+/* MENU ITEM */
+.menu {
+  padding: 12px 20px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.menu:hover {
+  background: #1f2937;
+}
+
+/* CONTENT */
+.content {
+  margin-left: 220px;
+  margin-top: 60px;
+  padding: 20px;
+}
+
+/* LOGO / TITLE */
+.logo {
+  font-weight: bold;
+  color: #F6D5AC;
+}
+
+/* USER */
+.user {
+  font-size: 14px;
+}
+</style>
+</head>
+
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="logo">Keuangan Harian</div>
+  <div class="user">
+    <span id="userEmail"></span>
+    |
+    <span onclick="logout()" style="cursor:pointer; color:#F6D5AC;">Logout</span>
+  </div>
+</div>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <div class="menu">Dashboard</div>
+  <div class="menu">Transaksi</div>
+  <div class="menu">Laporan</div>
+  <div class="menu">Pengaturan</div>
+</div>
+
+<!-- CONTENT -->
+<div class="content">
+  <h2>Dashboard</h2>
+  <p>Konten akan ditampilkan di sini</p>
+</div>
+<script>
+// tampilkan user login
+const user = localStorage.getItem("currentUser");
+
+if (!user) {
+  // kalau belum login, paksa balik
+  window.location.href = "login.html";
+} else {
+  document.getElementById("userEmail").innerText = user;
+}
+
+// logout
+function logout() {
+  localStorage.removeItem("currentUser");
+  window.location.href = "login.html";
+}
+</script>
+<div class="cursor"></div>
+<div class="cursor-outline"></div>
+
+<script src="cursor.js"></script>
+</body>
+</html>

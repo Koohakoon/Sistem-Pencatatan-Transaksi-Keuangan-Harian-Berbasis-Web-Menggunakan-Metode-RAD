@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <link rel="stylesheet" href="cursor.css">
+<meta charset="UTF-8">
+<title>Admin Login</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: Arial;
+  background: #0f172a;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.container {
+  width: 300px;
+  text-align: center;
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  margin: 8px 0;
+  border-radius: 10px;
+  border: none;
+}
+
+.btn {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid #F6D5AC;
+  border-radius: 20px;
+  background: transparent;
+  color: #F6D5AC;
+  cursor: pointer;
+}
+
+.btn:hover {
+  background: #F6D5AC;
+  color: #0f172a;
+}
+
+.back {
+  margin-top: 10px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #F6D5AC;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+  <h2>Login Admin</h2>
+
+  <input type="text" id="adminUser" placeholder="Username">
+  <input type="password" id="adminPass" placeholder="Password">
+
+  <button class="btn" onclick="loginAdmin()">Login</button>
+
+  <div class="back" onclick="goBack()">← Kembali</div>
+</div>
+
+<script>
+// akun admin statis (prototype)
+const ADMIN = {
+  username: "admin",
+  password: "12345"
+};
+
+function loginAdmin() {
+  const user = document.getElementById("adminUser").value;
+  const pass = document.getElementById("adminPass").value;
+
+  if (user === "admin" && pass === "12345") {
+    localStorage.setItem("isAdmin", "true");
+    window.location.href = "admin-dashboard.html";
+  } else {
+    alert("Username atau password salah!");
+  }
+}
+
+function goBack() {
+  window.location.href = "login.html";
+}
+</script>
+<div class="cursor"></div>
+<div class="cursor-outline"></div>
+
+<script src="cursor.js"></script>
+</body>
+</html>

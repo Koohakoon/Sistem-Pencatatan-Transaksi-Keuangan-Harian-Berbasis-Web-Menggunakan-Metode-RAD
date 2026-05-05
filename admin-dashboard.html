@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Admin Dashboard</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #0f172a;
+  color: white;
+}
+
+/* HEADER */
+.header {
+  height: 60px;
+  background: #0f172a;
+  border-bottom: 1px solid #1e293b;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+}
+
+/* SIDEBAR */
+.sidebar {
+  position: fixed;
+  top: 60px;
+  left: 0;
+  width: 230px;
+  height: calc(100% - 60px);
+  background: #111827;
+  border-right: 1px solid #1e293b;
+  padding-top: 20px;
+}
+
+/* MENU */
+.menu {
+  padding: 12px 20px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.menu:hover {
+  background: #1f2937;
+}
+
+/* CONTENT */
+.content {
+  margin-left: 230px;
+  margin-top: 60px;
+  padding: 20px;
+}
+
+/* LOGO */
+.logo {
+  font-weight: bold;
+  color: #F6D5AC;
+}
+
+/* USER */
+.user {
+  font-size: 14px;
+}
+
+.logout {
+  margin-left: 10px;
+  cursor: pointer;
+  color: #F6D5AC;
+}
+</style>
+</head>
+
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="logo">Admin Panel</div>
+  <div class="user">
+    Admin |
+    <span class="logout" onclick="logoutAdmin()">Logout</span>
+  </div>
+</div>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <div class="menu">Dashboard</div>
+  <div class="menu">Data User</div>
+  <div class="menu">Transaksi</div>
+  <div class="menu">Laporan</div>
+  <div class="menu">Pengaturan</div>
+</div>
+
+<!-- CONTENT -->
+<div class="content">
+  <h2>Dashboard Admin</h2>
+  <p>Kontrol sistem dan monitoring data</p>
+</div>
+
+<script>
+// proteksi sederhana (biar gak bisa masuk tanpa login admin)
+const isAdmin = localStorage.getItem("isAdmin");
+
+if (!isAdmin) {
+  window.location.href = "admin.html";
+}
+
+// logout admin
+function logoutAdmin() {
+  localStorage.removeItem("isAdmin");
+  window.location.href = "login.html";
+}
+</script>
+
+</body>
+</html>
