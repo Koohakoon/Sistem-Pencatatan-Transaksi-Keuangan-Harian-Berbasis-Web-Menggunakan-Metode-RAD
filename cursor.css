@@ -1,0 +1,28 @@
+body {
+  cursor: none;
+}
+
+.cursor {
+  position: fixed;
+  width: 8px;
+  height: 8px;
+  background: #F6D5AC;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+.cursor-outline {
+  position: fixed;
+  width: 30px;
+  height: 30px;
+  border: 2px solid #F6D5AC;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9998;
+  box-shadow: 0 0 20px #F6D5AC;
+}
+/* paksa semua elemen pakai custom cursor */
+* {
+  cursor: none !important;
+}

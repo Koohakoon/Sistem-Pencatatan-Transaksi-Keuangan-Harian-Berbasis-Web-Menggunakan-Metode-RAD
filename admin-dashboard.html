@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Admin Dashboard</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #0f172a;
+  color: white;
+}
+
+/* HEADER */
+.header {
+  height: 60px;
+  background: #0f172a;
+  border-bottom: 1px solid #1e293b;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+  position: fixed;
+  top: 0; left: 0; right: 0;
+}
+
+.logo { color: #F6D5AC; font-weight: bold; }
+
+.logout { color: #F6D5AC; cursor: pointer; }
+
+/* SIDEBAR */
+.sidebar {
+  position: fixed;
+  top: 60px;
+  left: 0;
+  width: 230px;
+  height: 100vh;
+  background: #111827;
+  border-right: 1px solid #1e293b;
+}
+
+.menu {
+  padding: 12px 20px;
+  cursor: pointer;
+}
+
+.menu:hover { background: #1f2937; }
+
+.active-menu {
+  border-left: 4px solid #F6D5AC;
+  background: #1f2937;
+}
+
+/* CONTENT */
+.content {
+  margin-left: 230px;
+  margin-top: 60px;
+  padding: 20px;
+}
+
+.page { display: none; }
+.active-page { display: block; }
+
+/* CARD */
+.cards {
+  display: flex;
+  gap: 20px;
+}
+
+.card {
+  flex: 1;
+  background: #111827;
+  padding: 20px;
+  border-radius: 15px;
+  border: 1px solid #1e293b;
+}
+
+.card h3 { color: #F6D5AC; }
+
+/* TABLE */
+.table-box {
+  margin-top: 20px;
+  background: #111827;
+  padding: 20px;
+  border-radius: 15px;
+  border: 1px solid #1e293b;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  padding: 12px;
+  border-bottom: 1px solid #1e293b;
+}
+
+th { color: #F6D5AC; }
+</style>
+</head>
+
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="logo">Admin Panel</div>
+  <div>
+    admin |
+    <span class="logout" onclick="logout()">Logout</span>
+  </div>
+</div>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <div class="menu active-menu" onclick="showPage('dashboard', this)">Dashboard</div>
+  <div class="menu" onclick="showPage('users', this)">User</div>
+  <div class="menu" onclick="showPage('trx', this)">Transaksi</div>
+</div>
+
+<!-- CONTENT -->
+<div class="content">
+
+  <!-- DASHBOARD -->
+  <div id="dashboard" class="page active-page">
+
+    <h2>Dashboard</h2>
+
+    <div class="cards">
+      <div class="card">
+        <h3>Total User</h3>
+        <p id="totalUser">0</p>
+      </div>
+
+      <div class="card">
+        <h3>Total Transaksi</h3>
+        <p id="totalTrx">0</p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- USER -->
+  <div id="users" class="page">
+
+    <div class="table-box">
+      <h3>Data User</h3>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Email</th>
+            <th>Password</th>
+            <th>Aksi</th>
+          </tr>
+        </thead>
+        <tbody id="userTable"></tbody>
+      </table>
+
+    </div>
+
+  </div>
+
+  <!-- TRANSAKSI -->
+  <div id="trx" class="page">
+
+    <div class="table-box">
+      <h3>Transaksi</h3>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Keterangan</th>
+            <th>Jenis</th>
+            <th>Nominal</th>
+          </tr>
+        </thead>
+        <tbody id="trxTable"></tbody>
+      </table>
+
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+
+/* =========================
+   DATA
+========================= */
+
+let users = JSON.parse(localStorage.getItem("users")) || [];
+let transactions = JSON.parse(localStorage.getItem("trx")) || [];
+
+/* =========================
+   DASHBOARD
+========================= */
+
+function updateDashboard() {
+  document.getElementById("totalUser").innerText = users.length;
+  document.getElementById("totalTrx").innerText = transactions.length;
+}
+
+/* =========================
+   USER RENDER
+========================= */
+
+const userTable = document.getElementById("userTable");
+
+function renderUsers() {
+
+  userTable.innerHTML = "";
+
+  if (users.length === 0) {
+    userTable.innerHTML = `<tr><td colspan="3">Belum ada user</td></tr>`;
+    updateDashboard();
+    return;
+  }
+
+  users.forEach((u, index) => {
+    userTable.innerHTML += `
+      <tr>
+        <td>${u.email}</td>
+        <td>${u.password || "-"}</td>
+        <td>
+          <button onclick="deleteUser(${index})"
+            style="background: crimson; color:white; border:none; padding:6px 10px; border-radius:8px; cursor:pointer;">
+            Hapus
+          </button>
+        </td>
+      </tr>
+    `;
+  });
+
+  updateDashboard();
+}
+
+/* =========================
+   DELETE USER
+========================= */
+
+function deleteUser(index) {
+
+  if (!confirm("Yakin mau hapus user ini?")) return;
+
+  users.splice(index, 1);
+
+  localStorage.setItem("users", JSON.stringify(users));
+
+  renderUsers();
+}
+
+/* =========================
+   TRANSAKSI RENDER
+========================= */
+
+const trxTable = document.getElementById("trxTable");
+
+function renderTransactions() {
+
+  trxTable.innerHTML = "";
+
+  if (transactions.length === 0) {
+    trxTable.innerHTML = `<tr><td colspan="3">Belum ada transaksi</td></tr>`;
+    updateDashboard();
+    return;
+  }
+
+  transactions.forEach(t => {
+    trxTable.innerHTML += `
+      <tr>
+        <td>${t.title}</td>
+        <td>${t.type}</td>
+        <td>Rp ${t.amount}</td>
+      </tr>
+    `;
+  });
+
+  updateDashboard();
+}
+
+/* =========================
+   NAVIGATION
+========================= */
+
+function showPage(id, el) {
+
+  document.querySelectorAll(".page")
+    .forEach(p => p.classList.remove("active-page"));
+
+  document.getElementById(id).classList.add("active-page");
+
+  document.querySelectorAll(".menu")
+    .forEach(m => m.classList.remove("active-menu"));
+
+  el.classList.add("active-menu");
+}
+
+/* =========================
+   LOGOUT
+========================= */
+
+function logout() {
+  window.location.href = "index.html";
+}
+
+/* =========================
+   INIT
+========================= */
+
+renderUsers();
+renderTransactions();
+
+</script>
+
+</body>
+</html>

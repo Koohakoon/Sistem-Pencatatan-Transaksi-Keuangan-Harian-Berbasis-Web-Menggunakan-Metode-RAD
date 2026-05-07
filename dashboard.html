@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+
+<link rel="icon" href="favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon.png">
+
+<link rel="stylesheet" href="cursor.css">
+
+<meta charset="UTF-8">
+<title>Dashboard</title>
+
+<style>
+
+/* ===== BASE ===== */
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #0f172a;
+  color: white;
+}
+
+/* HEADER */
+.header {
+  height: 60px;
+  background: #0f172a;
+  border-bottom: 1px solid #1e293b;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 0 20px;
+
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+
+  z-index: 100;
+}
+
+/* SIDEBAR */
+.sidebar {
+  position: fixed;
+  top: 60px;
+  left: 0;
+
+  width: 220px;
+  height: calc(100vh - 60px);
+
+  background: #111827;
+  border-right: 1px solid #1e293b;
+
+  padding-top: 20px;
+}
+
+/* MENU */
+.menu {
+  padding: 12px 20px;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.menu:hover {
+  background: #1f2937;
+}
+
+.active-menu {
+  background: #1f2937;
+  border-left: 4px solid #F6D5AC;
+}
+
+/* CONTENT */
+.content {
+  margin-left: 220px;
+  margin-top: 60px;
+  padding: 20px;
+}
+
+/* PAGE */
+.page {
+  display: none;
+}
+
+.active-page {
+  display: block;
+}
+
+/* LOGO */
+.logo {
+  font-weight: bold;
+  color: #F6D5AC;
+}
+
+/* USER */
+.user {
+  font-size: 14px;
+  color: #fff;
+}
+
+/* LOGOUT */
+.logout {
+  cursor: pointer;
+  color: #F6D5AC;
+}
+
+.logout:hover {
+  text-decoration: underline;
+}
+
+/* CARD */
+.cards {
+  display: flex;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.card {
+  flex: 1;
+  background: #111827;
+  border: 1px solid #1e293b;
+  border-radius: 20px;
+  padding: 20px;
+  transition: 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-3px);
+  border-color: #F6D5AC;
+}
+
+.card h3 {
+  margin-top: 0;
+  color: #F6D5AC;
+}
+
+.card p {
+  font-size: 28px;
+  font-weight: bold;
+}
+
+/* BOX */
+.transaction-box,
+.table-box {
+  margin-top: 30px;
+  background: #111827;
+  border: 1px solid #1e293b;
+  border-radius: 20px;
+  padding: 20px;
+}
+
+/* INPUT */
+.transaction-box input,
+.transaction-box select,
+#searchInput {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 10px;
+  border: none;
+  border-radius: 10px;
+  background: #0f172a;
+  color: white;
+  box-sizing: border-box;
+}
+
+/* BUTTON */
+.transaction-box button,
+.table-box button {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid #F6D5AC;
+  border-radius: 15px;
+  background: transparent;
+  color: #F6D5AC;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.transaction-box button:hover,
+.table-box button:hover {
+  background: #F6D5AC;
+  color: #0f172a;
+}
+
+/* TABLE */
+.table-box table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table-box th,
+.table-box td {
+  padding: 12px;
+  border-bottom: 1px solid #1e293b;
+  text-align: left;
+}
+
+.table-box th {
+  color: #F6D5AC;
+}
+
+/* ACTION */
+.action-btn {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 10px;
+  color: white;
+  cursor: pointer;
+  margin-right: 5px;
+}
+
+.edit-btn { background: #2563eb; }
+.delete-btn { background: crimson; }
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+
+  .sidebar { width: 180px; }
+  .content { margin-left: 180px; }
+  .cards { flex-direction: column; }
+}
+.btn-primary {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid #F6D5AC;
+  border-radius: 15px;
+  background: transparent;
+  color: #F6D5AC;
+  cursor: pointer;
+  transition: 0.3s ease;
+  margin-bottom: 10px;
+}
+
+.btn-primary:hover {
+  background: #F6D5AC;
+  color: #0f172a;
+}
+
+.btn-danger {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid crimson;
+  border-radius: 15px;
+  background: transparent;
+  color: crimson;
+  cursor: pointer;
+  transition: 0.3s ease;
+  margin-bottom: 10px;
+}
+
+.btn-danger:hover {
+  background: crimson;
+  color: white;
+}
+</style>
+</head>
+
+<body>
+
+<!-- HEADER -->
+<div class="header">
+
+  <div class="logo">
+    Keuangan Harian
+  </div>
+
+  <div class="user">
+    <span id="userEmail">user@email.com</span> |
+    <span class="logout" onclick="logout()">Logout</span>
+  </div>
+
+</div>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+
+  <div class="menu active-menu" onclick="showPage('dashboardPage', this)">Dashboard</div>
+  <div class="menu" onclick="showPage('transactionPage', this)">Transaksi</div>
+  <div class="menu" onclick="showPage('reportPage', this)">Laporan</div>
+  <div class="menu" onclick="showPage('settingPage', this)">Pengaturan</div>
+
+</div>
+
+<!-- CONTENT -->
+<div class="content">
+
+  <!-- DASHBOARD -->
+  <div id="dashboardPage" class="page active-page">
+
+    <h2>Dashboard</h2>
+
+    <div class="cards">
+
+      <div class="card">
+        <h3>Total Pemasukan</h3>
+        <p id="income">Rp 0</p>
+      </div>
+
+      <div class="card">
+        <h3>Total Pengeluaran</h3>
+        <p id="expense">Rp 0</p>
+      </div>
+
+      <div class="card">
+        <h3>Saldo</h3>
+        <p id="balance">Rp 0</p>
+      </div>
+
+    </div>
+
+    <div class="table-box">
+      <h3>Grafik Keuangan</h3>
+      <canvas id="financeChart"></canvas>
+    </div>
+
+  </div>
+
+  <!-- TRANSAKSI -->
+  <div id="transactionPage" class="page">
+
+    <div class="transaction-box">
+
+      <h3>Tambah Transaksi</h3>
+
+      <input id="title" type="text" placeholder="Keterangan">
+      <input id="amount" type="number" placeholder="Nominal">
+      <input id="date" type="date">
+
+      <select id="category">
+        <option>Makanan</option>
+        <option>Transport</option>
+        <option>Kuliah</option>
+        <option>Hiburan</option>
+        <option>Lainnya</option>
+      </select>
+
+      <select id="type">
+        <option value="income">Pemasukan</option>
+        <option value="expense">Pengeluaran</option>
+      </select>
+
+      <button onclick="addTransaction()">Simpan</button>
+
+    </div>
+
+    <div class="table-box">
+
+      <input id="searchInput" placeholder="Cari..." onkeyup="loadTransactions()">
+
+      <table>
+        <thead>
+          <tr>
+            <th>Tanggal</th>
+            <th>Keterangan</th>
+            <th>Kategori</th>
+            <th>Jenis</th>
+            <th>Nominal</th>
+            <th>Aksi</th>
+          </tr>
+        </thead>
+
+        <tbody id="transactionList"></tbody>
+      </table>
+
+    </div>
+
+  </div>
+
+  <!-- REPORT -->
+  <div id="reportPage" class="page">
+
+    <div class="cards">
+
+      <div class="card">
+        <h3>Pemasukan</h3>
+        <p id="reportIncome">Rp 0</p>
+      </div>
+
+      <div class="card">
+        <h3>Pengeluaran</h3>
+        <p id="reportExpense">Rp 0</p>
+      </div>
+
+      <div class="card">
+        <h3>Saldo</h3>
+        <p id="reportBalance">Rp 0</p>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- SETTING -->
+  <div id="settingPage" class="page">
+
+    <button class="btn-danger" onclick="clearTransactions()">Hapus Semua</button>
+<button class="btn-primary" onclick="exportData()">Export</button>
+
+  </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+
+/* dummy user (karena sudah HTML) */
+document.getElementById("userEmail").innerText =
+  localStorage.getItem("currentUser");
+
+/* logout */
+function logout() {
+  localStorage.clear();
+  window.location.href = "index.html";
+}
+
+/* navigation */
+function showPage(id, el) {
+
+  document.querySelectorAll(".page")
+    .forEach(p => p.classList.remove("active-page"));
+
+  document.getElementById(id).classList.add("active-page");
+
+  document.querySelectorAll(".menu")
+    .forEach(m => m.classList.remove("active-menu"));
+
+  el.classList.add("active-menu");
+}
+
+/* dummy data */
+let transactions = JSON.parse(localStorage.getItem("trx")) || [];
+
+/* render */
+function render() {
+
+  let income = 0, expense = 0;
+  let html = "";
+
+  transactions.forEach((t, i) => {
+
+    if (t.type === "income") income += +t.amount;
+    else expense += +t.amount;
+
+    html += `
+      <tr>
+        <td>${t.date}</td>
+        <td>${t.title}</td>
+        <td>${t.category}</td>
+        <td>${t.type}</td>
+        <td>${t.amount}</td>
+        <td>
+          <button onclick="del(${i})">Hapus</button>
+        </td>
+      </tr>
+    `;
+  });
+
+  document.getElementById("transactionList").innerHTML = html;
+
+  document.getElementById("income").innerText = "Rp " + income;
+  document.getElementById("expense").innerText = "Rp " + expense;
+  document.getElementById("balance").innerText = "Rp " + (income - expense);
+
+  drawChart(income, expense);
+}
+
+/* add */
+function addTransaction() {
+
+  transactions.push({
+    title: title.value,
+    amount: amount.value,
+    date: date.value,
+    category: category.value,
+    type: type.value
+  });
+
+  localStorage.setItem("trx", JSON.stringify(transactions));
+  render();
+}
+
+/* delete */
+function del(i) {
+  transactions.splice(i, 1);
+  localStorage.setItem("trx", JSON.stringify(transactions));
+  render();
+}
+
+/* chart */
+let chart;
+
+function drawChart(i, e) {
+
+  if (chart) chart.destroy();
+
+  chart = new Chart(financeChart, {
+    type: "doughnut",
+    data: {
+      labels: ["Income", "Expense"],
+      datasets: [{
+        data: [i, e]
+      }]
+    }
+  });
+}
+
+/* init */
+render();
+function exportData() {
+
+  // contoh data (sesuaikan dengan data kamu)
+  const data = transactions.map((t, index) => ({
+    No: index + 1,
+    Keterangan: t.title,
+    Jenis: t.type,
+    Nominal: t.amount
+  }));
+
+  // bikin worksheet
+  const ws = XLSX.utils.json_to_sheet(data);
+
+  // bikin workbook
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, "Transaksi");
+
+  // export file excel
+  XLSX.writeFile(wb, "data-transaksi.xlsx");
+}
+function clearTransactions() {
+
+  const confirmDelete = confirm("Yakin mau hapus semua transaksi?");
+
+  if (!confirmDelete) return;
+
+  // kosongkan data
+  transactions = [];
+
+  // update localStorage
+  localStorage.setItem("trx", JSON.stringify(transactions));
+
+  // render ulang UI
+  render();
+
+  alert("Semua transaksi berhasil dihapus!");
+}
+</script>
+<!-- CURSOR -->
+<div class="cursor"></div>
+<div class="cursor-outline"></div>
+
+<script src="cursor.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+</body>
+</html>
